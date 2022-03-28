@@ -4,7 +4,7 @@ all: clean run
 
 run: src/*.java
 	javac {src/**,src}/*.java -d class -Xlint:unchecked
-	java -cp class Main
+	java -cp class:lib/ojdbc.jar Main
 
 clean: 
 	rm -rf class/*

@@ -4,7 +4,6 @@ import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.SQLException;
-import java.util.Properties;
 import java.util.Optional;
 
 public class Db {
@@ -14,27 +13,18 @@ public class Db {
     private static String password = "5596";
 
     private Connection connection;
-    private Statement  statement;
+    private Statement statement;
 
     private Db() throws SQLException {
         this.connection = DriverManager.getConnection(url, user, password);
-        this.statement  = this.connection.createStatement();
-    }
-
-    private static Properties props() {
-        var props = new Properties();
-        props.setProperty("user", user);
-        props.setProperty("password", password);
-
-        return props;
+        this.statement = this.connection.createStatement();
     }
 
     public static Optional<Db> instance() {
         if (instance == null) {
             try {
                 return Optional.of(new Db());
-            }
-            catch (SQLException e) {
+            } catch (SQLException e) {
                 System.out.println(e.getMessage());
                 return Optional.empty();
             }

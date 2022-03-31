@@ -1,10 +1,8 @@
 import data.Db;
+import view.Menu;
 
 public class Main {
     public static void main(String[] args) {
-        var db = Db.instance();
-        db.ifPresentOrElse(
-                x -> System.out.println("Connected!"),
-                () -> System.out.println("Could not connect"));
+        new Menu();
     }
 }

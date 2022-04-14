@@ -7,44 +7,33 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 
+import view.components.MenuButton;
+
+import data.*;
+
 public class Menu extends Frame {
     private LinkedHashMap<String, ActionListener> options;
+    private Db db;
 
-    public Menu() {
+    public Menu(Db db) {
         super();
 
-        //this.control = control;
+        this.db = db;
         this.options = new LinkedHashMap<>() {{
-            put("Mostrar reservas", e -> {});
-            put("Mostrar usuarios",  e -> {});
+            put("Campamentos", e -> new CampsView(db));
+            put("Instructores", e -> new InstructorsView(db));
+            put("Reservas", e -> new BookingsView(db));
+            put("Usuarios", e -> new UsersView(db));
         }};
 
         withPanel(this::build);
     }
 
     private void build(JPanel panel) {
-        panel.setLayout(new GridLayout(4, 1, 10, 20));
+        panel.setLayout(new GridLayout(options.size() + 1, 1, 10, 20));
         panel.setBorder(new EmptyBorder(30, 44, 40, 44));
 
         panel.add(createLabel("Administración"));
-        options.forEach((title, cb) -> panel.add(new Button(title)));
-    }
-
-    private void showLandingForm() {
-        //new LandingForm(control);  
-    }
-
-    private void showTakeOffForm() {
-        //new TakeOffForm(control);
-    }
-
-    private void auth() {
-        /*
-        var authorized = control.auth(); 
-        if (authorized)
-            new AuthSuccess(control);
-        else 
-            new AuthFailure(control);
-            */
+        options.forEach((title, cb) -> panel.add(new MenuButton(title, cb)));
     }
 }

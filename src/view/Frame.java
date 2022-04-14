@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 
 public class Frame extends JFrame {
     public Frame() {
-        super("Administración");
+        super("Dbistración");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setBackground(Color.white);
     }

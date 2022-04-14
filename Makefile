@@ -1,6 +1,7 @@
 .PHONY: all test clean
 
 sources = $(shell find src -name "*.java")
+all = $(shell find src test -name "*.java")
 
 all: clean run
 
@@ -12,5 +13,5 @@ clean:
 	rm -rf class/*
 
 test: src/*.java test/*.java
-	javac {src,src/**,test}/*.java -d class -cp lib/junit.jar
+	javac $(all) -d class -cp lib/junit.jar
 	java -jar lib/junit.jar -cp class/ --scan-classpath

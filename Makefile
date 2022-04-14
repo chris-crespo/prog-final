@@ -6,7 +6,7 @@ all: clean run
 
 run: src/*.java
 	javac $(sources) -d class -Xlint:unchecked
-	java -cp class:lib/ojdbc.jar Main
+	java -cp class:lib/postgresql.jar Main
 
 clean: 
 	rm -rf class/*

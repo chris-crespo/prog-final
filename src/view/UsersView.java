@@ -7,6 +7,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 
+import view.Panel;
+
 import data.*;
 import models.User;
 
@@ -18,5 +20,9 @@ public class UsersView extends Frame {
         super();
 
         this.db = db;
+
+        withPanel(this::build);
     }
+
+    protected void build(Panel panel) {}
 }

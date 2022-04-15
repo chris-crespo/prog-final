@@ -5,6 +5,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 
+import view.Panel;
+
 import data.*;
 
 public class BookingsView extends Frame {
@@ -13,5 +15,9 @@ public class BookingsView extends Frame {
     public BookingsView(Db db) {
         super();
         this.db = db;
+
+        withPanel(this::build);
     }
+
+    protected void build(Panel panel) { }
 }

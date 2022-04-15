@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.*;
 
+import utils.Result;
 import models.*;
 
 interface RowMapper<T> {
@@ -27,6 +28,18 @@ public class Db {
 
     private Db() throws SQLException {
         this.connection = DriverManager.getConnection(url, user, password);
+
+        var closeHook = new Thread(this::close);
+        Runtime.getRuntime().addShutdownHook(closeHook);
+    }
+
+    private void close() {
+        try {
+            connection.close();
+        }
+        catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     public static Optional<Db> instance() {
@@ -42,6 +55,18 @@ public class Db {
         return Optional.of(instance);
     }
 
+    private <T> List<T> mapRs(ResultSet rs, RowMapper<T> fn) throws SQLException {
+        return new ArrayList<>() {{
+            while (rs.next()) add(fn.apply(rs));
+        }};
+    }
+
+    private <T> List<T> fetch(String query, RowMapper<T> fn) throws SQLException {
+        try (var rs = connection.createStatement().executeQuery(query)) {
+            return mapRs(rs, fn);
+        }
+    }
+
     private Camp mapCamp(ResultSet rs) throws SQLException {
         var name = rs.getString(1);
         var kind = rs.getString(2);
@@ -51,20 +76,8 @@ public class Db {
         return new Camp(name, kind, desc, loc);
     }
 
-    private <T> List<T> mapRs(ResultSet rs, RowMapper<T> fn) throws SQLException {
-        return new ArrayList<>() {{
-            while (rs.next()) add(fn.apply(rs));
-        }};
-    }
-
-    public List<Camp> fetchCamps() {
+    public Result<List<Camp>> fetchCamps() {
         var query = "select camp_name, kind, description, location from camp"; 
-        try (var rs = connection.createStatement().executeQuery(query)) {
-            return mapRs(rs, this::mapCamp);
-        }
-        catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return new ArrayList<>();
-        }
+        return Result.of(() -> fetch(query, this::mapCamp));
     }
 }

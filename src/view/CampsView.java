@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import view.Panel;
+import view.components.*;
 import view.components.Label;
 
 import data.*;
@@ -29,9 +30,39 @@ public class CampsView extends Frame {
         panel.add(new Label(text, Font.BOLD, 15)); 
     }
 
+    private void attachCamps(List<Camp> camps) {
+        var innerpanel = new JPanel() {{
+            setLayout(new GridBagLayout());
+        }};
+        
+        var scroll = new JScrollPane(innerpanel);
+        scroll.setPreferredSize(new Dimension(300, 200));
+
+        var row = 1;
+        for (var camp : camps) {
+            var constraints = new GridBagConstraints();
+            constraints.gridx = 0;
+            constraints.gridy = row++;
+            constraints.anchor = GridBagConstraints.WEST;
+            innerpanel.add(new CampCard(camp), constraints);
+        };
+
+        panel.add(scroll);
+    }
+
     private void showCamps(List<Camp> camps) {
-        var text = "No hay campamentos registrados.";
-        panel.add(new Label(text, Font.BOLD, 15));
+        setPreferredSize(new Dimension(340, 300));
+
+        var title = new Title("Campamentos");
+        panel.add(title); 
+
+        if (camps.size() == 0) {
+            var text = "No hay campamentos registrados.";
+            panel.add(new Label(text, Font.BOLD, 15));
+        }
+        else {
+            attachCamps(camps);
+        }
     }
 
     protected void build(Panel panel) {

@@ -20,13 +20,14 @@ interface RowMapper<T> {
 
 public class Db {
     private static Db instance;
-    private static String url = "jdbc:postgresql://ec2-34-246-227-219.eu-west-1.compute.amazonaws.com:5432/dbas1vp8gkllu9";
-    private static String user = "zuqecytnilorph";
-    private static String password = "6f81f26818ecf95518cec24cfc4fda9e1d3a1b81e86cafaeb08836128c624196";
+    private static String url = "jdbc:postgresql://" + System.getenv().get("DATABASE_URL");
+    private static String user = System.getenv().get("USER");
+    private static String password = System.getenv().get("PASSWORD");
 
     private Connection connection;
 
     private Db() throws SQLException {
+        System.out.println(url);
         this.connection = DriverManager.getConnection(url, user, password);
 
         var closeHook = new Thread(this::close);

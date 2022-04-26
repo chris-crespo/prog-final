@@ -6,7 +6,7 @@ all = $(shell find src test -name "*.java")
 all: clean run
 
 run: src/*.java
-	javac $(sources) -d class -Xlint:unchecked
+	javac $(sources) -d class -Xlint:unchecked -Xdiags:verbose
 	java -cp class:lib/postgresql.jar Main
 
 clean: 

@@ -31,30 +31,31 @@ public class CampsView extends Frame {
     }
 
     private void attachCamps(List<Camp> camps) {
-        var innerpanel = new JPanel() {{
-            setLayout(new GridBagLayout());
-        }};
-        
-        var scroll = new JScrollPane(innerpanel);
-        scroll.setPreferredSize(new Dimension(300, 200));
+        var scroll = new JScrollPane();
+        scroll.setVerticalScrollBarPolicy(
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scroll.setHorizontalScrollBarPolicy(
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        var row = 1;
-        for (var camp : camps) {
-            var constraints = new GridBagConstraints();
-            constraints.gridx = 0;
-            constraints.gridy = row++;
-            constraints.anchor = GridBagConstraints.WEST;
-            innerpanel.add(new CampCard(camp), constraints);
-        };
+        var innerPanel = new Panel();
+        innerPanel.setBorder(BorderFactory.createEmptyBorder());
+        scroll.setViewportView(innerPanel);
+        innerPanel.setLayout(new GridLayout(0, 1, 0, 0));
+        innerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        panel.add(scroll);
+        for (var camp : camps)
+            innerPanel.add(new CampCard(camp));
+
+        panel.add(scroll, BorderLayout.CENTER);
     }
 
     private void showCamps(List<Camp> camps) {
-        setPreferredSize(new Dimension(340, 300));
+        panel.setLayout(new BorderLayout());
+        panel.setPreferredSize(new Dimension(610, 400));
 
         var title = new Title("Campamentos");
-        panel.add(title); 
+        title.setBorder(new EmptyBorder(0, 0, 20, 0));
+        panel.add(title, BorderLayout.NORTH); 
 
         if (camps.size() == 0) {
             var text = "No hay campamentos registrados.";

@@ -15,6 +15,7 @@ public class CampCard extends Panel {
 
     public CampCard(Camp camp) {
         super();
+        System.out.println(camp);
         this.camp = camp;
 
         addMouseListener(new MouseAdapter() {
@@ -28,6 +29,12 @@ public class CampCard extends Panel {
             public void mouseExited(MouseEvent e) {
                 setBackground(new Color(238, 238, 238));
                 setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+        System.out.println(camp);
+                new CampForm(camp);
             }
         });
 

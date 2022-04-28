@@ -60,7 +60,7 @@ public class CampForm extends Form {
         var camp = (Camp)obj;
 
         addRequiredField("Nombre", camp.name());
-        addField("Tipo", new String[] { "Tecnológico" });
+        addRequiredField("Tipo", camp.kind());
         addRequiredField("Descripción", camp.description());
         addRequiredField("Lugar", camp.location());
         addRequiredField("Comienzo (dd/mm/yyyy)", withParsedDate(

@@ -40,7 +40,7 @@ public class CampsView extends Frame {
         var innerPanel = new Panel();
         innerPanel.setBorder(BorderFactory.createEmptyBorder());
         scroll.setViewportView(innerPanel);
-        innerPanel.setLayout(new GridLayout(0, 1, 0, 0));
+        innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.Y_AXIS));
         innerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         for (var camp : camps)

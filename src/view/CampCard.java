@@ -57,9 +57,11 @@ public class CampCard extends Panel {
     }
 
     private void build() {
-        setLayout(new GridLayout(0, 1, 0, 6));
-        setPreferredSize(new Dimension(600, 100));
-        setBorder(new EmptyBorder(2, 2, 2, 2));
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setPreferredSize(new Dimension(600, 40));
+
+        var bw = 8;
+        setBorder(new EmptyBorder(bw, bw, bw, bw));
 
         add(new Label(camp.name(), Font.BOLD, 15));
         add(new Label(camp.kind()));

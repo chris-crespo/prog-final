@@ -9,13 +9,15 @@ import java.awt.event.*;
 
 import view.components.Label;
 import models.Camp;
+import data.Db;
 
 public class CampCard extends Panel {
     private Camp camp;
+    private Db db;
 
-    public CampCard(Camp camp) {
+    public CampCard(Db db, Camp camp) {
         super();
-        System.out.println(camp);
+        this.db   = db;
         this.camp = camp;
 
         addMouseListener(new MouseAdapter() {
@@ -33,8 +35,7 @@ public class CampCard extends Panel {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-        System.out.println(camp);
-                new CampForm(camp);
+                new CampForm(db, camp);
             }
         });
 

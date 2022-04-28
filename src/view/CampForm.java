@@ -1,6 +1,8 @@
 package view;
 
 import java.util.function.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,10 +10,14 @@ import java.awt.event.*;
 
 import view.components.*;
 import models.Camp;
+import data.Db;
 
 public class CampForm extends Form {
-    public CampForm(Camp camp) {
+    private Db db;
+
+    public CampForm(Db db, Camp camp) {
         super(camp);
+        this.db = db;
     }
 
     private Predicate<String> withParsedString(Predicate<Integer> pred) {
@@ -35,6 +41,21 @@ public class CampForm extends Form {
         }
     }
 
+    private LocalDate parseDate(String str) {
+        return LocalDate.parse(str, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    }
+
+    private Predicate<String> withParsedDate(Predicate<LocalDate> pred) {
+        return str -> {
+            try {
+                return pred.test(parseDate(str));
+            }
+            catch (Exception exn) {
+                return false;
+            }
+        };
+    }
+
     protected void buildForm(Object obj) {
         var camp = (Camp)obj;
 
@@ -42,8 +63,14 @@ public class CampForm extends Form {
         addField("Tipo", new String[] { "Tecnológico" });
         addRequiredField("Descripción", camp.description());
         addRequiredField("Lugar", camp.location());
-        addRequiredField("Comienzo");
-        addRequiredField("Fin");
+        addRequiredField("Comienzo (dd/mm/yyyy)", withParsedDate(
+            date -> date.isAfter(LocalDate.now())
+                && date.isBefore(parseDate(inputs.get("Fin (dd/mm/yyyy)").getText()))
+        ));
+        addRequiredField("Fin (dd/mm/yyyy)", withParsedDate(
+            date -> date.isAfter(LocalDate.now())
+                && date.isAfter(parseDate(inputs.get("Comienzo (dd/mm/yyyy)").getText()))
+        ));
         addRequiredField("Edad Mínima", withParsedString(
             x -> 4 <= x && x <= parseIntOrDefault(inputs.get("Edad Máxima").getText(), 16)
         ));

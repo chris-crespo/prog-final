@@ -13,7 +13,7 @@ import view.components.*;
 
 public abstract class Form extends Frame {
     LinkedHashMap<String, FormInput> inputs;
-    LinkedHashMap<String, FormDropdown>  dropdowns;
+    LinkedHashMap<String, FormDropdown> dropdowns;
 
     private Object obj;
 

@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -16,6 +17,10 @@ import models.*;
 
 interface RowMapper<T> {
     T apply(ResultSet rs) throws SQLException;
+}
+
+interface StmntPrep<T> {
+    PreparedStatement prepare(PreparedStatement statement, T obj) throws SQLException;
 }
 
 public class Db {
@@ -68,17 +73,51 @@ public class Db {
         }
     }
 
-    private Camp mapCamp(ResultSet rs) throws SQLException {
-        var name = rs.getString(1);
-        var kind = rs.getString(2);
-        var desc = rs.getString(3);
-        var loc  = rs.getString(4);
+    private <T> int update(String query, StmntPrep<T> fn, T camp) throws SQLException {
+        try (var statement = connection.prepareStatement(query)) {
+            return fn.prepare(statement, camp).executeUpdate();
+        }
+    }
 
-        return new Camp(name, kind, desc, loc);
+    private Camp mapCamp(ResultSet rs) throws SQLException {
+        var id   = rs.getInt(1);
+        var name = rs.getString(2);
+        var kind = rs.getString(3);
+        var desc = rs.getString(4);
+        var loc  = rs.getString(5);
+        var min_age = rs.getInt(6);
+        var max_age = rs.getInt(7);
+
+        return new Camp(id, name, kind, desc, loc, min_age, max_age);
+    }
+
+    private PreparedStatement prepareCamp(PreparedStatement statement, Camp camp) throws SQLException {
+        statement.setString(1, camp.name());
+        statement.setString(2, camp.kind());
+        statement.setString(3, camp.description());
+        statement.setString(4, camp.location());
+        statement.setInt(5, camp.min_age());
+        statement.setInt(6, camp.max_age());
+        statement.setInt(7, camp.id());
+
+        return statement;
     }
 
     public Result<List<Camp>> fetchCamps() {
-        var query = "select camp_name, kind, description, location from camp"; 
+        var query = "select id, camp_name, kind, description, location, min_age, max_age from camp"; 
         return Result.of(() -> fetch(query, this::mapCamp));
+    }
+
+    public Result<Integer> updateCamp(Camp camp) {
+        var query = """
+            update camp set
+                camp_name = ?,
+                kind = ?,
+                description = ?,
+                location = ?,
+                min_age = ?,
+                max_age = ?
+            where id = ?;""";
+        return Result.of(() -> update(query, this::prepareCamp, camp));
     }
 }

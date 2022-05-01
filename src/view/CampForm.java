@@ -1,5 +1,6 @@
 package view;
 
+import java.util.ArrayList;
 import java.util.function.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -13,11 +14,9 @@ import models.Camp;
 import data.Db;
 
 public class CampForm extends Form {
-    private Db db;
 
-    public CampForm(Db db, Camp camp) {
-        super(camp);
-        this.db = db;
+    public CampForm(Camp camp, String[] campKinds) {
+        super(camp, campKinds);
     }
 
     private Predicate<String> withParsedString(Predicate<Integer> pred) {
@@ -56,11 +55,12 @@ public class CampForm extends Form {
         };
     }
 
-    protected void buildForm(Object obj) {
-        var camp = (Camp)obj;
+    protected void buildForm(Object[] params) {
+        var camp = (Camp)params[0];
+        var campKinds = (String[])params[1];
 
         addRequiredField("Nombre", camp.name());
-        addRequiredField("Tipo", camp.kind());
+        addField("Tipo", camp.kind(), campKinds);
         addRequiredField("Descripción", camp.description());
         addRequiredField("Lugar", camp.location());
         addRequiredField("Comienzo (dd/mm/yyyy)", withParsedDate(

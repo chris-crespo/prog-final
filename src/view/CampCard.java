@@ -35,7 +35,8 @@ public class CampCard extends Panel {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                new CampForm(db, camp);
+                db.fetchCampKinds().ifOk(kinds -> new CampForm(camp, kinds.toArray(new String[] {})))
+                    .ifError(exn -> new CampKindFetchFailure());
             }
         });
 

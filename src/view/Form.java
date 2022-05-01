@@ -15,38 +15,45 @@ public abstract class Form extends Frame {
     LinkedHashMap<String, FormInput> inputs;
     LinkedHashMap<String, FormDropdown> dropdowns;
 
-    private Object obj;
+    private Object[] params;
 
     private Panel panel;
     private int rows;
 
     public Form() {
-        this(null);
-    }
-
-    public Form(Object obj) {
         super();
 
         this.inputs    = new LinkedHashMap<>();
         this.dropdowns = new LinkedHashMap<>();
-
-        // Guardamos un objeto al que podremos acceder durante la construcción
-        // del formulario. Esto nos permitirá usar sus atributos como valores
-        // por defecto, entre otros.
-        this.obj = obj;
+        this.params = null;
         this.rows = 0;
 
         withPanel(this::build);
     }
 
-    protected abstract void buildForm(Object obj);
+    public Form(Object... params) {
+        super();
+
+        this.inputs    = new LinkedHashMap<>();
+        this.dropdowns = new LinkedHashMap<>();
+
+        // Guardamos un array de objetos al que podremos acceder durante la 
+        // construcción del formulario. Esto nos permitirá usar sus atributos 
+        // como valores por defecto, entre otros.
+        this.params = params;
+        this.rows = 0;
+
+        withPanel(this::build);
+    }
+
+    protected abstract void buildForm(Object[] params);
 
     protected void build(Panel panel) {
         this.panel = panel;
         panel.setLayout(new GridBagLayout());
         panel.setBorder(new EmptyBorder(30, 44, 40, 44));
 
-        buildForm(obj);
+        buildForm(params);
 
         var submitButton = new FormSubmitButton(this::handleSubmit);
         panel.add(submitButton, submitButton.constraints(rows));
@@ -92,9 +99,10 @@ public abstract class Form extends Frame {
         panel.add(input, input.constraints(rows++));
     }
 
-    void addField(String name, String[] options) {
+    void addField(String name, String def, String[] options) {
         var label    = new FormLabel(name);
         var dropdown = new FormDropdown(options);
+        dropdown.setSelectedItem(def);
 
         dropdowns.put(name, dropdown);
         panel.add(label, label.constraints(rows));

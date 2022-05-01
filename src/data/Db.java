@@ -91,6 +91,10 @@ public class Db {
         return new Camp(id, name, kind, desc, loc, min_age, max_age);
     }
 
+    private String mapCampKind(ResultSet rs) throws SQLException {
+        return rs.getString(1);
+    }
+
     private PreparedStatement prepareCamp(PreparedStatement statement, Camp camp) throws SQLException {
         statement.setString(1, camp.name());
         statement.setString(2, camp.kind());
@@ -106,6 +110,11 @@ public class Db {
     public Result<List<Camp>> fetchCamps() {
         var query = "select id, camp_name, kind, description, location, min_age, max_age from camp"; 
         return Result.of(() -> fetch(query, this::mapCamp));
+    }
+
+    public Result<List<String>> fetchCampKinds() {
+        var query = "select kind from camp_kind";
+        return Result.of(() -> fetch(query, this::mapCampKind));
     }
 
     public Result<Integer> updateCamp(Camp camp) {

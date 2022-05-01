@@ -22,6 +22,8 @@ public interface Result<T> {
 
     public Result<T> ifOk(Consumer<T> consumer);
     public Result<T> ifError(Consumer<Exception> consumer);
+
+    public T unwrap();
 }
 
 class Ok<T> implements Result<T> {
@@ -39,6 +41,10 @@ class Ok<T> implements Result<T> {
     public Result<T> ifError(Consumer<Exception> consumer) {
         return this;
     }
+
+    public T unwrap() {
+        return val;
+    }
 }
 
 class Error<T> implements Result<T> {
@@ -55,5 +61,9 @@ class Error<T> implements Result<T> {
     public Result<T> ifError(Consumer<Exception> consumer) {
         consumer.accept(exn);
         return this;
+    }
+
+    public T unwrap() {
+        return null;
     }
 }

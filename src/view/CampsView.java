@@ -25,7 +25,7 @@ public class CampsView extends Frame {
         withPanel(this::build);
     }
 
-    private void failedToFetch() {
+    private void failedToFetch(Exception exn) {
         var text = "No se pudo obtener los datos.";
         panel.add(new Label(text, Font.BOLD, 15)); 
     }
@@ -71,6 +71,6 @@ public class CampsView extends Frame {
 
         db.fetchCamps()
             .ifOk(this::showCamps)
-            .ifError(e -> failedToFetch());
+            .ifError(this::failedToFetch);
     }
 }

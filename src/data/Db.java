@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
+import java.sql.Date;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -80,15 +81,17 @@ public class Db {
     }
 
     private Camp mapCamp(ResultSet rs) throws SQLException {
-        var id     = rs.getInt(1);
-        var name   = rs.getString(2);
-        var kind   = rs.getString(3);
-        var desc   = rs.getString(4);
-        var loc    = rs.getString(5);
-        var minAge = rs.getInt(6);
-        var maxAge = rs.getInt(7);
+        var id        = rs.getInt(1);
+        var name      = rs.getString(2);
+        var kind      = rs.getString(3);
+        var desc      = rs.getString(4);
+        var loc       = rs.getString(5);
+        var startDate = rs.getDate(6).toLocalDate();
+        var endDate   = rs.getDate(7).toLocalDate();
+        var minAge    = rs.getInt(8);
+        var maxAge    = rs.getInt(9);
 
-        return new Camp(id, name, kind, desc, loc, minAge, maxAge);
+        return new Camp(id, name, kind, desc, loc, startDate, endDate, minAge, maxAge);
     }
 
     private String mapCampKind(ResultSet rs) throws SQLException {
@@ -100,15 +103,17 @@ public class Db {
         statement.setString(2, camp.kind());
         statement.setString(3, camp.description());
         statement.setString(4, camp.location());
-        statement.setInt(5, camp.minAge());
-        statement.setInt(6, camp.maxAge());
-        statement.setInt(7, camp.id());
+        statement.setDate(5, Date.valueOf(camp.startDate()));
+        statement.setDate(6, Date.valueOf(camp.endDate()));
+        statement.setInt(7, camp.minAge());
+        statement.setInt(8, camp.maxAge());
+        statement.setInt(9, camp.id());
 
         return statement;
     }
 
     public Result<List<Camp>> fetchCamps() {
-        var query = "select id, camp_name, kind, description, location, min_age, max_age from camp"; 
+        var query = "select * from camp"; 
         return Result.of(() -> fetch(query, this::mapCamp));
     }
 
@@ -120,12 +125,14 @@ public class Db {
     public Result<Integer> updateCamp(Camp camp) {
         var query = """
             update camp set
-                camp_name = ?,
-                kind = ?,
+                camp_name   = ?,
+                kind        = ?,
                 description = ?,
-                location = ?,
-                min_age = ?,
-                max_age = ?
+                location    = ?,
+                start_date  = ?,
+                end_date    = ?,
+                min_age     = ?,
+                max_age     = ?
             where id = ?;""";
         return Result.of(() -> update(query, this::prepareCamp, camp));
     }

@@ -59,6 +59,10 @@ public class CampForm extends Form {
         };
     }
 
+    private String formatDate(LocalDate date) {
+        return date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    }
+
     protected void buildForm(Object[] params) {
         var camp = (Camp)params[0];
         var campKinds = (String[])params[1];
@@ -67,11 +71,11 @@ public class CampForm extends Form {
         addField("Tipo", camp.kind(), campKinds);
         addRequiredField("Descripción", camp.description());
         addRequiredField("Lugar", camp.location());
-        addRequiredField("Comienzo (dd/mm/yyyy)", withParsedDate(
+        addRequiredField("Comienzo (dd/mm/yyyy)", formatDate(camp.startDate()), withParsedDate(
             date -> date.isAfter(LocalDate.now())
                 && date.isBefore(parseDate(inputs.get("Fin (dd/mm/yyyy)").getText()))
         ));
-        addRequiredField("Fin (dd/mm/yyyy)", withParsedDate(
+        addRequiredField("Fin (dd/mm/yyyy)", formatDate(camp.endDate()), withParsedDate(
             date -> date.isAfter(LocalDate.now())
                 && date.isAfter(parseDate(inputs.get("Comienzo (dd/mm/yyyy)").getText()))
         ));
@@ -84,13 +88,15 @@ public class CampForm extends Form {
     }
 
     protected void onSubmit(ActionEvent e) {
-        var name    = inputs.get("Nombre").getText();
-        var kind    = (String) dropdowns.get("Tipo").getSelectedItem();
-        var desc    = inputs.get("Descripción").getText();
-        var loc     = inputs.get("Lugar").getText();
-        var minAge  = Integer.parseInt(inputs.get("Edad Mínima").getText());
-        var maxAge  = Integer.parseInt(inputs.get("Edad Máxima").getText());
+        var name      = inputs.get("Nombre").getText();
+        var kind      = (String) dropdowns.get("Tipo").getSelectedItem();
+        var desc      = inputs.get("Descripción").getText();
+        var loc       = inputs.get("Lugar").getText();
+        var startDate = parseDate(inputs.get("Comienzo (dd/mm/yyyy)").getText());
+        var endDate   = parseDate(inputs.get("Fin (dd/mm/yyyy)").getText());
+        var minAge    = Integer.parseInt(inputs.get("Edad Mínima").getText());
+        var maxAge    = Integer.parseInt(inputs.get("Edad Máxima").getText());
 
-        db.updateCamp(new Camp(camp.id(), name, kind, desc, loc, minAge, maxAge));
+        db.updateCamp(new Camp(camp.id(), name, kind, desc, loc, startDate, endDate, minAge, maxAge));
     }
 }

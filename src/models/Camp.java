@@ -1,10 +1,10 @@
 package models;
 
 public record Camp(
-        int id, 
+        int id,
         String name, 
         String kind, 
         String description, 
         String location,
-        int min_age,
-        int max_age) {}
+        int minAge,
+        int maxAge) {}

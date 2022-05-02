@@ -44,7 +44,7 @@ public class CampsView extends Frame {
         innerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         for (var camp : camps)
-            innerPanel.add(new CampCard(db, camp));
+            innerPanel.add(new CampCard(db, camp, this::dispose));
 
         panel.add(scroll, BorderLayout.CENTER);
     }

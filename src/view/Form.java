@@ -63,7 +63,7 @@ public abstract class Form extends Frame {
         addRequiredField(name, t -> true);
     }
 
-    void addRequiredField(String name, String def) {
+    <T> void addRequiredField(String name, T def) {
         addRequiredField(name, def, t -> true);
     }
 
@@ -71,7 +71,7 @@ public abstract class Form extends Frame {
         addRequiredField(name, "", validator);
     }
 
-    void addRequiredField(String name, String def, Predicate<String> validator) {
+    <T> void addRequiredField(String name, T def, Predicate<String> validator) {
         addField(name, def, validator);
         inputs.get(name).required();
     }
@@ -80,7 +80,7 @@ public abstract class Form extends Frame {
         addField(name, "", t -> true);
     }
 
-    void addField(String name, String def) {
+    <T> void addField(String name, T def) {
         addField(name, def, t -> true); 
     }
 
@@ -88,10 +88,10 @@ public abstract class Form extends Frame {
         addField(name, "", validator);
     }
 
-    void addField(String name, String def, Predicate<String> validator) {
+    <T> void addField(String name, T def, Predicate<String> validator) {
         var label = new FormLabel(name);
         var input = new FormInput(validator);
-        input.setText(def);
+        input.setText(def.toString());
         input.setCaretPosition(0);
 
         inputs.put(name, input);

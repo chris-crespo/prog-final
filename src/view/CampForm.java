@@ -14,9 +14,13 @@ import models.Camp;
 import data.Db;
 
 public class CampForm extends Form {
+    private Db db;
+    private Camp camp;
 
-    public CampForm(Camp camp, String[] campKinds) {
+    public CampForm(Db db, Camp camp, String[] campKinds) {
         super(camp, campKinds);
+        this.camp = camp;
+        this.db = db;
     }
 
     private Predicate<String> withParsedString(Predicate<Integer> pred) {
@@ -71,15 +75,22 @@ public class CampForm extends Form {
             date -> date.isAfter(LocalDate.now())
                 && date.isAfter(parseDate(inputs.get("Comienzo (dd/mm/yyyy)").getText()))
         ));
-        addRequiredField("Edad Mínima", withParsedString(
+        addRequiredField("Edad Mínima", camp.minAge(), withParsedString(
             x -> 4 <= x && x <= parseIntOrDefault(inputs.get("Edad Máxima").getText(), 16)
         ));
-        addRequiredField("Edad Máxima", withParsedString(
+        addRequiredField("Edad Máxima", camp.maxAge(), withParsedString(
             x -> parseIntOrDefault(inputs.get("Edad Mínima").getText(), 4) <= x && x <= 16
         ));
     }
 
     protected void onSubmit(ActionEvent e) {
-        System.out.println("Submitted");
+        var name    = inputs.get("Nombre").getText();
+        var kind    = (String) dropdowns.get("Tipo").getSelectedItem();
+        var desc    = inputs.get("Descripción").getText();
+        var loc     = inputs.get("Lugar").getText();
+        var minAge  = Integer.parseInt(inputs.get("Edad Mínima").getText());
+        var maxAge  = Integer.parseInt(inputs.get("Edad Máxima").getText());
+
+        db.updateCamp(new Camp(camp.id(), name, kind, desc, loc, minAge, maxAge));
     }
 }

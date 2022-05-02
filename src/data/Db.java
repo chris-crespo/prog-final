@@ -80,15 +80,15 @@ public class Db {
     }
 
     private Camp mapCamp(ResultSet rs) throws SQLException {
-        var id   = rs.getInt(1);
-        var name = rs.getString(2);
-        var kind = rs.getString(3);
-        var desc = rs.getString(4);
-        var loc  = rs.getString(5);
-        var min_age = rs.getInt(6);
-        var max_age = rs.getInt(7);
+        var id     = rs.getInt(1);
+        var name   = rs.getString(2);
+        var kind   = rs.getString(3);
+        var desc   = rs.getString(4);
+        var loc    = rs.getString(5);
+        var minAge = rs.getInt(6);
+        var maxAge = rs.getInt(7);
 
-        return new Camp(id, name, kind, desc, loc, min_age, max_age);
+        return new Camp(id, name, kind, desc, loc, minAge, maxAge);
     }
 
     private String mapCampKind(ResultSet rs) throws SQLException {
@@ -100,8 +100,8 @@ public class Db {
         statement.setString(2, camp.kind());
         statement.setString(3, camp.description());
         statement.setString(4, camp.location());
-        statement.setInt(5, camp.min_age());
-        statement.setInt(6, camp.max_age());
+        statement.setInt(5, camp.minAge());
+        statement.setInt(6, camp.maxAge());
         statement.setInt(7, camp.id());
 
         return statement;

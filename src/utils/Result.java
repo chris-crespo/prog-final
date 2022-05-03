@@ -23,6 +23,7 @@ public interface Result<T> {
     public Result<T> ifOk(Consumer<T> consumer);
     public Result<T> ifError(Consumer<Exception> consumer);
 
+    public <U> Result<U> map(Function<T, U> fn); 
     public T unwrap();
 }
 
@@ -40,6 +41,10 @@ class Ok<T> implements Result<T> {
 
     public Result<T> ifError(Consumer<Exception> consumer) {
         return this;
+    }
+
+    public <U> Result<U> map(Function<T, U> fn) {
+        return new Ok<U>(fn.apply(val));
     }
 
     public T unwrap() {
@@ -61,6 +66,10 @@ class Error<T> implements Result<T> {
     public Result<T> ifError(Consumer<Exception> consumer) {
         consumer.accept(exn);
         return this;
+    }
+
+    public <U> Result<U> map(Function<T, U> fn) {
+        return new Error<U>(exn);
     }
 
     public T unwrap() {

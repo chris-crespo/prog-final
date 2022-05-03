@@ -1,5 +1,6 @@
 package view;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.function.*;
 import java.time.LocalDate;
@@ -7,11 +8,13 @@ import java.time.format.DateTimeFormatter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.awt.event.*;
 
 import view.components.*;
 import models.Camp;
 import data.Db;
+import utils.Image;
 
 public class CampForm extends Form {
     private Db db;
@@ -85,6 +88,10 @@ public class CampForm extends Form {
         addRequiredField("Edad Máxima", camp.maxAge(), withParsedString(
             x -> parseIntOrDefault(inputs.get("Edad Mínima").getText(), 4) <= x && x <= 16
         ));
+
+        Image.load("assets/placeholder.png")
+            .ifOk(img -> addImage("Añadir/Cambiar imagen", img))
+            .ifError(err -> System.out.println(err.getMessage()));
     }
 
     protected void onSubmit(ActionEvent e) {

@@ -7,9 +7,11 @@ import java.util.function.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.image.*;
 import java.awt.event.*;
 
 import view.components.*;
+import utils.Image;
 
 public abstract class Form extends Frame {
     LinkedHashMap<String, FormInput> inputs;
@@ -107,6 +109,21 @@ public abstract class Form extends Frame {
         dropdowns.put(name, dropdown);
         panel.add(label, label.constraints(rows));
         panel.add(dropdown, dropdown.constraints(rows++));
+    }
+
+    void addImage(String name, BufferedImage placeholder) {
+        var button = new FormButton(name);
+        var label  = new FormImage(Image.resize(placeholder, 200, 100));
+
+        button.addActionListener(e -> {
+            Image.selectImage().ifPresent(
+                res -> res.map(img -> Image.resize(img, 100, 100))
+                        .ifOk(img -> label.setIcon(new ImageIcon(img)))
+                        .ifError(err -> System.out.println(err.getMessage())));
+        });
+
+        panel.add(button, button.constraints(rows));
+        panel.add(label, label.constraints(rows++));
     }
 
     private boolean valid() {

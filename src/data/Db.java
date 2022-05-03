@@ -98,7 +98,7 @@ public class Db {
         return rs.getString(1);
     }
 
-    private PreparedStatement prepareCamp(PreparedStatement statement, Camp camp) throws SQLException {
+    private PreparedStatement prepareCampInsert(PreparedStatement statement, Camp camp) throws SQLException {
         statement.setString(1, camp.name());
         statement.setString(2, camp.kind());
         statement.setString(3, camp.description());
@@ -107,6 +107,12 @@ public class Db {
         statement.setDate(6, Date.valueOf(camp.endDate()));
         statement.setInt(7, camp.minAge());
         statement.setInt(8, camp.maxAge());
+
+        return statement;
+    }
+
+    private PreparedStatement prepareCampUpdate(PreparedStatement statement, Camp camp) throws SQLException {
+        prepareCampInsert(statement, camp);
         statement.setInt(9, camp.id());
 
         return statement;
@@ -122,6 +128,11 @@ public class Db {
         return Result.of(() -> fetch(query, this::mapCampKind));
     }
 
+    public Result<Integer> addCamp(Camp camp) {
+        var query = "insert into camp values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        return Result.of(() -> update(query, this::prepareCampInsert, camp));
+    }
+
     public Result<Integer> updateCamp(Camp camp) {
         var query = """
             update camp set
@@ -134,6 +145,6 @@ public class Db {
                 min_age     = ?,
                 max_age     = ?
             where id = ?;""";
-        return Result.of(() -> update(query, this::prepareCamp, camp));
+        return Result.of(() -> update(query, this::prepareCampUpdate, camp));
     }
 }

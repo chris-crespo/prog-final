@@ -15,6 +15,7 @@ public class FormImage extends JLabel {
         constraints.gridx = 1;
         constraints.gridy = row;
         constraints.gridwidth = 1;
+        constraints.insets = new Insets(0, 0, 20, 0);
         return constraints;
     }
 }

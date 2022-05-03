@@ -28,6 +28,7 @@ public class CampsView extends Frame {
     private void failedToFetch(Exception exn) {
         var text = "No se pudo obtener los datos.";
         panel.add(new Label(text, Font.BOLD, 15)); 
+        panel.add(new Label(exn.getMessage(), Font.BOLD, 13)); 
     }
 
     private void attachCamps(List<Camp> camps) {
@@ -64,6 +65,12 @@ public class CampsView extends Frame {
         else {
             attachCamps(camps);
         }
+
+        var btn = new JButton("Añadir campamento");
+        btn.addActionListener(e -> db.fetchCampKinds()
+            .ifOk(kinds -> new NewCampForm(db, kinds.toArray(new String[] {})))
+            .ifError(exn -> new CampKindFetchFailure()));;
+        panel.add(btn, BorderLayout.SOUTH);
     }
 
     protected void build(Panel panel) {

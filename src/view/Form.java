@@ -101,6 +101,10 @@ public abstract class Form extends Frame {
         panel.add(input, input.constraints(rows++));
     }
 
+    void addField(String name, String[] options) {
+        addField(name, "", options);
+    }
+
     void addField(String name, String def, String[] options) {
         var label    = new FormLabel(name);
         var dropdown = new FormDropdown(options);
@@ -111,16 +115,16 @@ public abstract class Form extends Frame {
         panel.add(dropdown, dropdown.constraints(rows++));
     }
 
-    void addImage(String name, BufferedImage placeholder) {
-        var button = new FormButton(name);
-        var label  = new FormImage(Image.resize(placeholder, 200, 100));
+    private ActionListener updateImage(FormImage label) {
+        return e -> Image.selectImage().ifPresent(res -> 
+            res.map(img -> Image.resize(img, 200, 100))
+                .ifOk(img -> label.setIcon(new ImageIcon(img)))
+                .ifError(err -> System.out.println(err.getMessage())));
+    }
 
-        button.addActionListener(e -> {
-            Image.selectImage().ifPresent(
-                res -> res.map(img -> Image.resize(img, 100, 100))
-                        .ifOk(img -> label.setIcon(new ImageIcon(img)))
-                        .ifError(err -> System.out.println(err.getMessage())));
-        });
+    void addImage(String name, BufferedImage placeholder) {
+        var label  = new FormImage(Image.resize(placeholder, 200, 100));
+        var button = new FormButton(name, updateImage(label));
 
         panel.add(button, button.constraints(rows));
         panel.add(label, label.constraints(rows++));

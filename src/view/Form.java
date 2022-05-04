@@ -57,8 +57,11 @@ public abstract class Form extends Frame {
 
         buildForm(params);
 
-        var submitButton = new FormSubmitButton(this::handleSubmit);
+        var submitButton = new FormButton("Ok", this::handleSubmit);
         panel.add(submitButton, submitButton.constraints(rows));
+
+        var deleteButton = new FormButton("Delete", this::handleDelete);
+        panel.add(deleteButton, deleteButton.constraints(rows));
     }
 
     void addRequiredField(String name) {
@@ -122,14 +125,6 @@ public abstract class Form extends Frame {
                 .ifError(err -> System.out.println(err.getMessage())));
     }
 
-    void addImage(String name, BufferedImage placeholder) {
-        var label  = new FormImage(Image.resize(placeholder, 200, 100));
-        var button = new FormButton(name, updateImage(label));
-
-        panel.add(button, button.constraints(rows));
-        panel.add(label, label.constraints(rows++));
-    }
-
     private boolean valid() {
         return inputs.entrySet().stream()
             .map(Map.Entry::getValue)
@@ -147,5 +142,11 @@ public abstract class Form extends Frame {
         }
     }
 
+    private void handleDelete(ActionEvent e) {
+        onDelete(e);
+        dispose();
+    }
+
     abstract void onSubmit(ActionEvent e);
+    abstract void onDelete(ActionEvent e);
 }

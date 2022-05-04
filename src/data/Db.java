@@ -118,6 +118,11 @@ public class Db {
         return statement;
     }
 
+    private PreparedStatement prepareCampDelete(PreparedStatement statement, Camp camp) throws SQLException {
+        statement.setInt(0, camp.id());
+        return statement;
+    }
+
     public Result<List<Camp>> fetchCamps() {
         var query = "select * from camp"; 
         return Result.of(() -> fetch(query, this::mapCamp));
@@ -146,5 +151,10 @@ public class Db {
                 max_age     = ?
             where id = ?;""";
         return Result.of(() -> update(query, this::prepareCampUpdate, camp));
+    }
+
+    public Result<Integer> deleteCamp(Camp camp) {
+        var query = "delete from camp where id = ?";
+        return Result.of(() -> update(query, this::prepareCampDelete, camp));
     }
 }

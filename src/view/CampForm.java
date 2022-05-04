@@ -88,10 +88,6 @@ public class CampForm extends Form {
         addRequiredField("Edad Máxima", camp.maxAge(), withParsedString(
             x -> parseIntOrDefault(inputs.get("Edad Mínima").getText(), 4) <= x && x <= 16
         ));
-
-        Image.load("assets/placeholder.png")
-            .ifOk(img -> addImage("Añadir/Cambiar imagen", img))
-            .ifError(err -> System.out.println(err.getMessage()));
     }
 
     protected void onSubmit(ActionEvent e) {
@@ -105,5 +101,9 @@ public class CampForm extends Form {
         var maxAge    = Integer.parseInt(inputs.get("Edad Máxima").getText());
 
         db.updateCamp(new Camp(camp.id(), name, kind, desc, loc, startDate, endDate, minAge, maxAge));
+    }
+
+    protected void onDelete(ActionEvent e) {
+        db.deleteCamp(camp.id()); 
     }
 }

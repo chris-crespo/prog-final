@@ -7,7 +7,7 @@ import java.awt.Font;
 import view.components.*;
 
 public class ConnectionFailure extends Frame {
-    public static String text = "No se pudo establecer conexión con SQLite";
+    public static String text = "No se pudo establecer conexión con la base de datos";
     public ConnectionFailure() {
         super(JFrame.EXIT_ON_CLOSE);
         withPanel(this::build);

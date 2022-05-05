@@ -98,6 +98,16 @@ public class Db {
         return rs.getString(1);
     }
 
+    private User mapUser(ResultSet rs) throws SQLException {
+        var username = rs.getString(1);
+        var email    = rs.getString(2);
+        var firstName = rs.getString(4);
+        var lastName  = rs.getString(5);
+        var phone     = rs.getString(6);
+
+        return new User(username, email, String.format("%s %s", firstName, lastName), phone);
+    }
+
     private PreparedStatement prepareCampInsert(PreparedStatement statement, Camp camp) throws SQLException {
         statement.setString(1, camp.name());
         statement.setString(2, camp.kind());
@@ -131,6 +141,11 @@ public class Db {
     public Result<List<String>> fetchCampKinds() {
         var query = "select kind from camp_kind";
         return Result.of(() -> fetch(query, this::mapCampKind));
+    }
+
+    public Result<List<User>> fetchUsers() {
+        var query = "select * from app_user";
+        return Result.of(() -> fetch(query, this::mapUser));
     }
 
     public Result<Integer> addCamp(Camp camp) {

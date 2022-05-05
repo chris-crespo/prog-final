@@ -12,17 +12,8 @@ import view.Panel;
 import data.*;
 import models.User;
 
-public class UsersView extends Frame {
-    private Db db;
-    private List<User> users;
-
+public class UsersView extends ListView<User> {
     public UsersView(Db db) {
-        super();
-
-        this.db = db;
-
-        withPanel(this::build);
+        super(db, "Usuarios", UserCard.class, db::fetchUsers);
     }
-
-    protected void build(Panel panel) {}
 }

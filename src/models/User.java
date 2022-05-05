@@ -1,3 +1,3 @@
 package models;
 
-public record User(String email, String full_name, String address, String phone) {}
+public record User(String username, String email, String name, String phone) {}

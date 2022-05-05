@@ -16,4 +16,11 @@ public class FormButton extends JButton {
         constraints.gridwidth = 1;
         return constraints;
     }
+
+    public GridBagConstraints constraints(int row, int width) {
+        var constraints = new GridBagConstraints();
+        constraints.gridy = row;
+        constraints.gridwidth = width;
+        return constraints;
+    }
 }

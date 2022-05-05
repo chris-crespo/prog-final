@@ -119,7 +119,7 @@ public class Db {
     }
 
     private PreparedStatement prepareCampDelete(PreparedStatement statement, Camp camp) throws SQLException {
-        statement.setInt(0, camp.id());
+        statement.setInt(1, camp.id());
         return statement;
     }
 
@@ -134,7 +134,9 @@ public class Db {
     }
 
     public Result<Integer> addCamp(Camp camp) {
-        var query = "insert into camp values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        var query = """
+            insert into camp (camp_name, kind, description, location, start_date, end_date, min_age, max_age)
+            values (?, ?, ?, ?, ?, ?, ?, ?)""";
         return Result.of(() -> update(query, this::prepareCampInsert, camp));
     }
 

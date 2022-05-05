@@ -21,19 +21,21 @@ public abstract class Form extends Frame {
 
     private Panel panel;
     private int rows;
+    private boolean withDeleteButton;
 
-    public Form() {
+    public Form(boolean withDeleteButton) {
         super();
 
         this.inputs    = new LinkedHashMap<>();
         this.dropdowns = new LinkedHashMap<>();
         this.params = null;
         this.rows = 0;
+        this.withDeleteButton = withDeleteButton;
 
         withPanel(this::build);
     }
 
-    public Form(Object... params) {
+    public Form(boolean withDeleteButton, Object... params) {
         super();
 
         this.inputs    = new LinkedHashMap<>();
@@ -44,6 +46,7 @@ public abstract class Form extends Frame {
         // como valores por defecto, entre otros.
         this.params = params;
         this.rows = 0;
+        this.withDeleteButton = withDeleteButton;
 
         withPanel(this::build);
     }
@@ -58,10 +61,12 @@ public abstract class Form extends Frame {
         buildForm(params);
 
         var submitButton = new FormButton("Ok", this::handleSubmit);
-        panel.add(submitButton, submitButton.constraints(rows));
+        panel.add(submitButton, submitButton.constraints(rows, withDeleteButton ? 1 : 2));
 
-        var deleteButton = new FormButton("Delete", this::handleDelete);
-        panel.add(deleteButton, deleteButton.constraints(rows));
+        if (withDeleteButton) {
+            var deleteButton = new FormButton("Delete", this::handleDelete);
+            panel.add(deleteButton, deleteButton.constraints(rows));
+        }
     }
 
     void addRequiredField(String name) {
@@ -148,5 +153,5 @@ public abstract class Form extends Frame {
     }
 
     abstract void onSubmit(ActionEvent e);
-    abstract void onDelete(ActionEvent e);
+    void onDelete(ActionEvent e) {};
 }

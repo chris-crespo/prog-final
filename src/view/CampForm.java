@@ -21,7 +21,7 @@ public class CampForm extends Form {
     private Camp camp;
 
     public CampForm(Db db, Camp camp, String[] campKinds) {
-        super(camp, campKinds);
+        super(true, camp, campKinds);
         this.camp = camp;
         this.db = db;
     }
@@ -100,10 +100,12 @@ public class CampForm extends Form {
         var minAge    = Integer.parseInt(inputs.get("Edad Mínima").getText());
         var maxAge    = Integer.parseInt(inputs.get("Edad Máxima").getText());
 
-        db.updateCamp(new Camp(camp.id(), name, kind, desc, loc, startDate, endDate, minAge, maxAge));
+        db.updateCamp(new Camp(camp.id(), name, kind, desc, loc, startDate, endDate, minAge, maxAge))
+            .ifError(OperationFailure::new);
     }
 
     protected void onDelete(ActionEvent e) {
-        db.deleteCamp(camp.id()); 
+        db.deleteCamp(camp)
+            .ifError(OperationFailure::new); 
     }
 }

@@ -67,9 +67,13 @@ public class CampsView extends Frame {
         }
 
         var btn = new JButton("Añadir campamento");
-        btn.addActionListener(e -> db.fetchCampKinds()
-            .ifOk(kinds -> new NewCampForm(db, kinds.toArray(new String[] {})))
-            .ifError(exn -> new CampKindFetchFailure()));;
+        btn.addActionListener(e -> {
+            db.fetchCampKinds()
+                .ifOk(kinds -> new NewCampForm(db, kinds.toArray(new String[] {})))
+                .ifError(exn -> new CampKindFetchFailure());
+            dispose();
+        });
+
         panel.add(btn, BorderLayout.SOUTH);
     }
 

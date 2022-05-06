@@ -1,6 +1,6 @@
 package view;
 
-import java.util.List; 
+import java.util.List;
 import java.util.function.Supplier;
 
 import javax.swing.*;
@@ -27,10 +27,10 @@ public abstract class ListView<T> extends Frame {
         super();
         this.db = db;
 
-        this.name      = name;
+        this.name = name;
         this.cardClass = cardClass;
-        this.fetch     = fetch;
-        this.btnCb     = null;
+        this.fetch = fetch;
+        this.btnCb = null;
 
         withPanel(this::build);
     }
@@ -39,17 +39,17 @@ public abstract class ListView<T> extends Frame {
         super();
         this.db = db;
 
-        this.name      = name;
+        this.name = name;
         this.cardClass = cardClass;
-        this.fetch     = fetch;
-        this.btnCb     = cb;
+        this.fetch = fetch;
+        this.btnCb = cb;
 
         withPanel(this::build);
     }
 
     private void failedToFetch(Exception exn) {
         var text = "No se pudo obtener los datos.";
-        panel.add(new Label(text, Font.BOLD, 15)); 
+        panel.add(new Label(text, Font.BOLD, 15));
     }
 
     private void attachItems(List<T> items) {
@@ -68,9 +68,8 @@ public abstract class ListView<T> extends Frame {
         var constructor = cardClass.getDeclaredConstructors()[0];
         for (var item : items) {
             try {
-                innerPanel.add((Panel)constructor.newInstance(db, item, (Runnable)this::dispose));
-            }
-            catch (Exception exn) {
+                innerPanel.add((Panel) constructor.newInstance(db, item, (Runnable) this::dispose));
+            } catch (Exception exn) {
                 System.out.println("Exception trying to instantiate class: " + exn.getMessage());
             }
         }
@@ -93,13 +92,12 @@ public abstract class ListView<T> extends Frame {
 
         var title = new Title(name);
         title.setBorder(new EmptyBorder(0, 0, 20, 0));
-        panel.add(title, BorderLayout.NORTH); 
+        panel.add(title, BorderLayout.NORTH);
 
         if (items.size() == 0) {
             var text = String.format("No hay %s registrados.", name.toLowerCase());
             panel.add(new Label(text, Font.BOLD, 15));
-        }
-        else {
+        } else {
             attachItems(items);
         }
 
@@ -111,7 +109,7 @@ public abstract class ListView<T> extends Frame {
         this.panel = panel;
 
         fetch.get()
-            .ifOk(this::show)
-            .ifError(this::failedToFetch);
+                .ifOk(this::show)
+                .ifError(this::failedToFetch);
     }
 }

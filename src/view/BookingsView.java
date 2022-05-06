@@ -8,16 +8,10 @@ import java.awt.event.*;
 import view.Panel;
 
 import data.*;
+import models.Booking;
 
-public class BookingsView extends Frame {
-    private Db db;
-
+public class BookingsView extends ListView<Booking> {
     public BookingsView(Db db) {
-        super();
-        this.db = db;
-
-        withPanel(this::build);
+        super(db, "Reservas", BookingCard.class, db::fetchBookings);
+    
     }
-
-    protected void build(Panel panel) { }
-}

@@ -43,8 +43,7 @@ public class Db {
     private void close() {
         try {
             connection.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
         }
     }
@@ -63,9 +62,12 @@ public class Db {
     }
 
     private <T> List<T> mapRs(ResultSet rs, RowMapper<T> fn) throws SQLException {
-        return new ArrayList<>() {{
-            while (rs.next()) add(fn.apply(rs));
-        }};
+        return new ArrayList<>() {
+            {
+                while (rs.next())
+                    add(fn.apply(rs));
+            }
+        };
     }
 
     private <T> List<T> fetch(String query, RowMapper<T> fn) throws SQLException {
@@ -81,15 +83,15 @@ public class Db {
     }
 
     private Camp mapCamp(ResultSet rs) throws SQLException {
-        var id        = rs.getInt(1);
-        var name      = rs.getString(2);
-        var kind      = rs.getString(3);
-        var desc      = rs.getString(4);
-        var loc       = rs.getString(5);
+        var id = rs.getInt(1);
+        var name = rs.getString(2);
+        var kind = rs.getString(3);
+        var desc = rs.getString(4);
+        var loc = rs.getString(5);
         var startDate = rs.getDate(6).toLocalDate();
-        var endDate   = rs.getDate(7).toLocalDate();
-        var minAge    = rs.getInt(8);
-        var maxAge    = rs.getInt(9);
+        var endDate = rs.getDate(7).toLocalDate();
+        var minAge = rs.getInt(8);
+        var maxAge = rs.getInt(9);
 
         return new Camp(id, name, kind, desc, loc, startDate, endDate, minAge, maxAge);
     }
@@ -100,12 +102,21 @@ public class Db {
 
     private User mapUser(ResultSet rs) throws SQLException {
         var username = rs.getString(1);
-        var email    = rs.getString(2);
+        var email = rs.getString(2);
         var firstName = rs.getString(4);
-        var lastName  = rs.getString(5);
-        var phone     = rs.getString(6);
+        var lastName = rs.getString(5);
+        var phone = rs.getString(6);
 
         return new User(username, email, String.format("%s %s", firstName, lastName), phone);
+    }
+
+    private Booking mapBooking(ResultSet rs) throws SQLException {
+        var kidName = rs.getString(1);
+        var email = rs.getString(2);
+        var kidDni = rs.getString(3);
+        var campName = rs.getString(4);
+
+        return new Booking(kidName, email, kidDni, campName);
     }
 
     private PreparedStatement prepareCampInsert(PreparedStatement statement, Camp camp) throws SQLException {
@@ -134,7 +145,7 @@ public class Db {
     }
 
     public Result<List<Camp>> fetchCamps() {
-        var query = "select * from camp"; 
+        var query = "select * from camp";
         return Result.of(() -> fetch(query, this::mapCamp));
     }
 
@@ -148,25 +159,37 @@ public class Db {
         return Result.of(() -> fetch(query, this::mapUser));
     }
 
+    public Result<List<Booking>> fetchBookings() {
+        // Select kid name, username and booking */
+        var query = """
+                select kid_name, u.email, kid_dni, camp_name
+                from kid k join booking b
+                on b.kid = k.dni
+                join app_user u
+                on u.email = b.user_email""";
+
+        return Result.of(() -> fetch(query, this::mapBooking));
+    }
+
     public Result<Integer> addCamp(Camp camp) {
         var query = """
-            insert into camp (camp_name, kind, description, location, start_date, end_date, min_age, max_age)
-            values (?, ?, ?, ?, ?, ?, ?, ?)""";
+                insert into camp (camp_name, kind, description, location, start_date, end_date, min_age, max_age)
+                values (?, ?, ?, ?, ?, ?, ?, ?)""";
         return Result.of(() -> update(query, this::prepareCampInsert, camp));
     }
 
     public Result<Integer> updateCamp(Camp camp) {
         var query = """
-            update camp set
-                camp_name   = ?,
-                kind        = ?,
-                description = ?,
-                location    = ?,
-                start_date  = ?,
-                end_date    = ?,
-                min_age     = ?,
-                max_age     = ?
-            where id = ?;""";
+                update camp set
+                    camp_name   = ?,
+                    kind        = ?,
+                    description = ?,
+                    location    = ?,
+                    start_date  = ?,
+                    end_date    = ?,
+                    min_age     = ?,
+                    max_age     = ?
+                where id = ?;""";
         return Result.of(() -> update(query, this::prepareCampUpdate, camp));
     }
 

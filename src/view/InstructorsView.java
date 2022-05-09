@@ -8,16 +8,10 @@ import java.awt.event.*;
 import view.Panel;
 
 import data.*;
+import models.Instructor;
 
-public class InstructorsView extends Frame {
-    private Db db;
-
+public class InstructorsView extends ListView<Instructor> {
     public InstructorsView(Db db) {
-        super();
-        this.db = db;
-
-        withPanel(this::build);
+        super(db, "Instructores", InstructorCard.class, db::fetchInstructors);
     }
-
-    protected void build(Panel panel) {}
 }

@@ -28,8 +28,7 @@ public class BookingCard extends Panel {
         // kidname (email)
         // dni
         // campName
-        add(new Label(booking.kidName(), Font.BOLD, 15));
-        add(new Label(booking.email(), Font.PLAIN, 13));
+        add(new Label(String.format("%s ,(%s)", booking.kidName(), booking.userEmail()), Font.BOLD, 15));
         add(new Label(booking.kidDni(), Font.PLAIN, 13));
         add(new Label(booking.campName(), Font.PLAIN, 13));
     }

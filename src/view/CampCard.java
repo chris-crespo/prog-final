@@ -17,7 +17,7 @@ public class CampCard extends Panel {
 
     public CampCard(Db db, Camp camp, Runnable disposeView) {
         super();
-        this.db   = db;
+        this.db = db;
         this.camp = camp;
 
         addMouseListener(new MouseAdapter() {
@@ -36,8 +36,8 @@ public class CampCard extends Panel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 db.fetchCampKinds()
-                    .ifOk(kinds -> new CampForm(db, camp, kinds.toArray(new String[] {})))
-                    .ifError(exn -> new CampKindFetchFailure());
+                        .ifOk(kinds -> new CampForm(db, camp, kinds.toArray(new String[] {})))
+                        .ifError(exn -> new CampKindFetchFailure());
 
                 disposeView.run();
             }

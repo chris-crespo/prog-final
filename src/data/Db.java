@@ -3,6 +3,7 @@ package data;
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.Statement;
+import java.text.Format;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
@@ -107,16 +108,27 @@ public class Db {
         var lastName = rs.getString(5);
         var phone = rs.getString(6);
 
-        return new User(username, email, String.format("%s %s", firstName, lastName), phone);
+        return new User(username, email, firstName + " " + lastName, phone);
     }
 
     private Booking mapBooking(ResultSet rs) throws SQLException {
         var kidName = rs.getString(1);
-        var email = rs.getString(2);
-        var kidDni = rs.getString(3);
+        var kidDni = rs.getString(2);
+        var email = rs.getString(3);
         var campName = rs.getString(4);
 
-        return new Booking(kidName, email, kidDni, campName);
+        return new Booking(kidName, kidDni, email, campName);
+    }
+
+    private Instructor mapInstructor(ResultSet rs) throws SQLException {
+        var dni = rs.getString(1);
+        var firstName = rs.getString(2);
+        var lastName = rs.getString(3);
+        var phone = rs.getString(4);
+        var campName = rs.getString(5);
+        var activity = rs.getString(6);
+
+        return new Instructor(dni, firstName + " " + lastName, phone, campName, activity);
     }
 
     private PreparedStatement prepareCampInsert(PreparedStatement statement, Camp camp) throws SQLException {
@@ -160,15 +172,27 @@ public class Db {
     }
 
     public Result<List<Booking>> fetchBookings() {
-        // Select kid name, username and booking */
         var query = """
-                select kid_name, u.email, kid_dni, camp_name
-                from kid k join booking b
+                select concat(k.first_name, ' ', k.last_name), dni, u.email, camp_name
+                from booking b join kid k
                 on b.kid = k.dni
                 join app_user u
-                on u.email = b.user_email""";
+                on u.email = b.user_email
+                join camp c
+                on c.id = b.camp""";
 
         return Result.of(() -> fetch(query, this::mapBooking));
+    }
+
+    public Result<List<Instructor>> fetchInstructors() {
+        var query = """
+                select dni, first_name, last_name, phone, camp_name, activity
+                from instructor i join camp c
+                on i.camp = c.id
+                join activity a
+                on i.activity = a.act_name""";
+
+        return Result.of(() -> fetch(query, this::mapInstructor));
     }
 
     public Result<Integer> addCamp(Camp camp) {

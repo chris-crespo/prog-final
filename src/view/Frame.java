@@ -9,7 +9,8 @@ import java.awt.event.ActionListener;
 import view.Panel;
 
 public abstract class Frame extends JFrame {
-    private static String title = "Torre de Control";
+    private static String title = "Gestion de Campamiento";
+
     public Frame() {
         super(title);
     }

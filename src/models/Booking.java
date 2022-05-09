@@ -1,4 +1,10 @@
 package models;
 
-public record Booking(String kidName, String email, String kidDni, String campName) {
+public record Booking(String kidName, String kidDni, String userEmail, String campName) {
 }
+
+/*
+ * <name> (<dni>, <email>)
+ * <email>
+ * <camp>
+ */

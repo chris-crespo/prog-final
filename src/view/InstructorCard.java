@@ -11,7 +11,7 @@ import models.Instructor;
 public class InstructorCard extends Panel {
     private Instructor instructor;
 
-    public InstructorCard(Db db, Instructor instructor) {
+    public InstructorCard(Db db, Instructor instructor, Runnable disposeView) {
         super();
         this.instructor = instructor;
 

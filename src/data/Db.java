@@ -26,9 +26,9 @@ interface StmntPrep<T> {
 
 public class Db {
     private static Db instance;
-    private static String url = "jdbc:postgresql://" + System.getenv().get("DATABASE_URL");
-    private static String user = System.getenv().get("USER");
-    private static String password = System.getenv().get("PASSWORD");
+    private static String url = "jdbc:postgresql://ec2-54-164-40-66.compute-1.amazonaws.com:5432/d8f5g95nfav1ct";
+    private static String user = "qcvhtyeqwvepqc";
+    private static String password = "659503667819440713159bc9a9b6fe23930a5dda971c0efbdf0e823d191c8c8a";
 
     private Connection connection;
 

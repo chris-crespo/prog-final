@@ -1,21 +1,20 @@
 package data;
 
-import java.sql.DriverManager;
 import java.sql.Connection;
-import java.sql.Statement;
-import java.text.Format;
-import java.sql.SQLException;
-import java.sql.ResultSet;
-import java.sql.PreparedStatement;
 import java.sql.Date;
-
-import java.util.List;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.function.*;
 
+import models.Booking;
+import models.Camp;
+import models.Instructor;
+import models.User;
 import utils.Result;
-import models.*;
 
 interface RowMapper<T> {
     T apply(ResultSet rs) throws SQLException;

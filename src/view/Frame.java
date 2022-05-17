@@ -2,11 +2,7 @@ package view;
 
 import java.util.function.Consumer;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionListener;
-
-import view.Panel;
+import javax.swing.JFrame;
 
 public abstract class Frame extends JFrame {
     private static String title = "Gestion de Campamiento";

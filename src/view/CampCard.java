@@ -13,11 +13,9 @@ import data.Db;
 
 public class CampCard extends Panel {
     private Camp camp;
-    private Db db;
 
     public CampCard(Db db, Camp camp, Runnable disposeView) {
         super();
-        this.db = db;
         this.camp = camp;
 
         addMouseListener(new MouseAdapter() {
@@ -70,7 +68,6 @@ public class CampCard extends Panel {
 
     private void build() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setPreferredSize(new Dimension(600, 40));
 
         var bw = 8;
         setBorder(new EmptyBorder(bw, bw, bw, bw));
